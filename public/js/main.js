@@ -281,11 +281,18 @@ function renderResults(final) {
   else toast(t('toast.all_survive'));
 }
 
+// "Perdido efectivo": no sobrevive a nivel HTTP, o hubo redirect real, o se
+// detectó limpieza de URL por JS — en los tres casos el parámetro no llega
+// intacto, aunque el chequeo HTTP puro por sí solo diga "sobrevive".
+function esPerdidoEfectivo(r) {
+  return !r.sobrevive || r.redirigida === true || r.posibleLimpiezaJs === true;
+}
+
 function renderTable() {
   const body = $('results-body');
   const rows = state.resultados.filter((r) => {
-    if (state.filtro === 'ok') return r.sobrevive && !r.esError;
-    if (state.filtro === 'lost') return !r.sobrevive && !r.esError;
+    if (state.filtro === 'ok') return !r.esError && !esPerdidoEfectivo(r);
+    if (state.filtro === 'lost') return !r.esError && esPerdidoEfectivo(r);
     if (state.filtro === 'err') return !!r.esError;
     if (state.filtro === 'redir') return r.redirigida === true;
     if (state.filtro === 'warn') return r.posibleLimpiezaJs === true;
@@ -300,7 +307,7 @@ function renderTable() {
   body.innerHTML = rows.map((r) => {
     const badge = r.esError
       ? `<span class="badge badge-err">${t('badge.error')}</span>`
-      : r.sobrevive
+      : !esPerdidoEfectivo(r)
         ? `<span class="badge badge-ok">${t('badge.survive')}</span>`
         : `<span class="badge badge-lost">${t('badge.lost')}</span>`;
     const redirBadge = r.redirigida === true
@@ -341,7 +348,7 @@ function resultadosACsv(resultados) {
     t('table.redirects'), t('table.js_warn'), t('table.http_status'),
   ];
   const filas = resultados.map((r) => {
-    const estado = r.esError ? t('badge.error') : r.sobrevive ? t('badge.survive') : t('badge.lost');
+    const estado = r.esError ? t('badge.error') : !esPerdidoEfectivo(r) ? t('badge.survive') : t('badge.lost');
     const redirige = r.redirigida === true ? t('badge.yes') : r.redirigida === false ? t('badge.no') : '';
     const limpiezaJs = r.esError ? '' : r.posibleLimpiezaJs ? t('badge.yes') : t('badge.no');
     return [estado, r.original, r.final || r.error || '', redirige, limpiezaJs, r.status ?? ''].map(csvEscape).join(',');
