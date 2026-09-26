@@ -10,6 +10,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/styles.css">
+<script>
+  // Setear idioma antes de que carguen los módulos ES
+  window.__TRACKFLOW_LANG = localStorage.getItem('trackflow-lang') || 'es';
+  document.getElementById('html-root').lang = window.__TRACKFLOW_LANG;
+</script>
 </head>
 <body>
 <div class="app">
@@ -22,9 +27,10 @@
       </div>
       <div class="hdr-t">
         <h1>Track<em>-Flow</em></h1>
-        <p>Tracking Param Audit</p>
+        <p data-i18n="header.tagline">Tracking Param Audit</p>
       </div>
       <div class="hdr-actions">
+        <button class="btn-hdr-icon btn-hdr-lang" id="btn-lang" title="Switch to English" aria-label="Switch to English">EN</button>
         <button class="btn-hdr-icon" id="btn-theme" title="Cambiar tema" aria-label="Cambiar tema">
           <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display:none"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
           <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -36,43 +42,43 @@
 
 <!-- ══ A — CONFIGURAR AUDITORÍA ══ -->
 <div class="card" id="c-config">
-  <div class="card-title">A — Configurar Auditoría<span class="card-status" id="config-status"></span></div>
+  <div class="card-title"><span data-i18n="card.config">A — Configurar Auditoría</span><span class="card-status" id="config-status"></span></div>
 
   <div class="field-row">
     <div class="field" style="flex:2">
-      <label for="f-url">URL del sitio a auditar</label>
-      <input type="url" id="f-url" placeholder="https://ejemplo.com/landing">
-      <span class="field-hint">Se rastrean solo links internos del mismo dominio.</span>
+      <label for="f-url" data-i18n="config.url_label">URL del sitio a auditar</label>
+      <input type="url" id="f-url" placeholder="https://ejemplo.com/landing" data-i18n-placeholder="config.url_ph">
+      <span class="field-hint" data-i18n="config.url_hint">Se rastrean solo links internos del mismo dominio.</span>
     </div>
   </div>
 
   <div class="field-row">
     <div class="field">
-      <label for="f-param-nombre">Parámetro a testear</label>
+      <label for="f-param-nombre" data-i18n="config.param_label">Parámetro a testear</label>
       <input type="text" id="f-param-nombre" placeholder="gclid" value="gclid">
     </div>
     <div class="field">
-      <label for="f-param-valor">Valor de prueba</label>
+      <label for="f-param-valor" data-i18n="config.value_label">Valor de prueba</label>
       <input type="text" id="f-param-valor" placeholder="tf-test-12345" value="tf-test-12345">
     </div>
   </div>
 
   <div class="adv-toggle" id="adv-toggle">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-    Opciones avanzadas
+    <span data-i18n="config.advanced">Opciones avanzadas</span>
   </div>
   <div class="adv-body" id="adv-body">
     <div class="field-row">
       <div class="field">
-        <label for="f-max-urls">Máx. URLs a rastrear</label>
+        <label for="f-max-urls" data-i18n="config.max_urls">Máx. URLs a rastrear</label>
         <input type="number" id="f-max-urls" min="1" max="200" value="30">
       </div>
       <div class="field">
-        <label for="f-delay">Delay entre requests (ms)</label>
+        <label for="f-delay" data-i18n="config.delay">Delay entre requests (ms)</label>
         <input type="number" id="f-delay" min="0" max="5000" step="50" value="300">
       </div>
       <div class="field">
-        <label for="f-timeout">Timeout por request (ms)</label>
+        <label for="f-timeout" data-i18n="config.timeout">Timeout por request (ms)</label>
         <input type="number" id="f-timeout" min="1000" max="30000" step="500" value="8000">
       </div>
     </div>
@@ -80,63 +86,63 @@
 
   <div id="config-error" class="err-box hidden"></div>
 
-  <button class="btn btn-p btn-full" id="btn-start">Iniciar auditoría</button>
+  <button class="btn btn-p btn-full" id="btn-start" data-i18n="config.start_btn">Iniciar auditoría</button>
 </div>
 
 <!-- ══ B — PROGRESO EN VIVO ══ -->
 <div class="card hidden" id="c-progress">
-  <div class="card-title">B — Progreso en vivo<span class="card-status" id="progress-status">Rastreando…</span></div>
+  <div class="card-title"><span data-i18n="card.progress">B — Progreso en vivo</span><span class="card-status" id="progress-status" data-i18n="progress.crawling">Rastreando…</span></div>
 
   <div class="prog-summary">
-    <div class="prog-item"><span class="prog-n" id="prog-visitadas">0</span><span class="prog-l">URLs visitadas</span></div>
-    <div class="prog-item"><span class="prog-n" id="prog-testeadas">0</span><span class="prog-l">Testeadas</span></div>
-    <div class="prog-item"><span class="prog-n acc" id="prog-ok">0</span><span class="prog-l">Sobreviven</span></div>
-    <div class="prog-item"><span class="prog-n redc" id="prog-lost">0</span><span class="prog-l">Perdidos</span></div>
+    <div class="prog-item"><span class="prog-n" id="prog-visitadas">0</span><span class="prog-l" data-i18n="progress.visited">URLs visitadas</span></div>
+    <div class="prog-item"><span class="prog-n" id="prog-testeadas">0</span><span class="prog-l" data-i18n="progress.tested">Testeadas</span></div>
+    <div class="prog-item"><span class="prog-n acc" id="prog-ok">0</span><span class="prog-l" data-i18n="progress.survive">Sobreviven</span></div>
+    <div class="prog-item"><span class="prog-n redc" id="prog-lost">0</span><span class="prog-l" data-i18n="progress.lost">Perdidos</span></div>
   </div>
 
   <div class="pbar-bg"><div class="pbar-fg indet" id="pbar"></div></div>
 
   <div class="log" id="log"></div>
 
-  <button class="btn btn-g btn-sm" id="btn-cancel" style="margin-top:12px">Cancelar</button>
+  <button class="btn btn-g btn-sm" id="btn-cancel" style="margin-top:12px" data-i18n="progress.cancel">Cancelar</button>
 </div>
 
 <!-- ══ C — RESULTADOS ══ -->
 <div class="card hidden" id="c-results">
-  <div class="card-title">C — Resultados<span class="card-status" id="results-status"></span></div>
+  <div class="card-title"><span data-i18n="card.results">C — Resultados</span><span class="card-status" id="results-status"></span></div>
 
   <div class="sum-box" id="sum-box"></div>
 
   <div class="atb">
-    <button class="btn btn-g btn-sm" id="btn-download-csv">Descargar CSV</button>
+    <button class="btn btn-g btn-sm" id="btn-download-csv" data-i18n="results.download_csv">Descargar CSV</button>
     <span class="sp"></span>
-    <button class="fb on" data-filter="all">Todos</button>
-    <button class="fb" data-filter="ok">Sobreviven</button>
-    <button class="fb" data-filter="lost">Perdidos</button>
-    <button class="fb" data-filter="redir">Redirigen</button>
-    <button class="fb" data-filter="err">Errores</button>
+    <button class="fb on" data-filter="all" data-i18n="filter.all">Todos</button>
+    <button class="fb" data-filter="ok" data-i18n="filter.survive">Sobreviven</button>
+    <button class="fb" data-filter="lost" data-i18n="filter.lost">Perdidos</button>
+    <button class="fb" data-filter="redir" data-i18n="filter.redirect">Redirigen</button>
+    <button class="fb" data-filter="err" data-i18n="filter.errors">Errores</button>
   </div>
 
   <div class="twrap">
     <table>
       <thead>
         <tr>
-          <th>Estado</th>
-          <th>URL original (con parámetro)</th>
-          <th>URL final</th>
-          <th>¿Redirige?</th>
-          <th>Status</th>
+          <th data-i18n="table.status">Estado</th>
+          <th data-i18n="table.url_original">URL original (con parámetro)</th>
+          <th data-i18n="table.url_final">URL final</th>
+          <th data-i18n="table.redirects">¿Redirige?</th>
+          <th data-i18n="table.http_status">Status</th>
         </tr>
       </thead>
       <tbody id="results-body"></tbody>
     </table>
   </div>
 
-  <button class="btn btn-g btn-sm" id="btn-new-audit" style="margin-top:14px">Nueva auditoría</button>
+  <button class="btn btn-g btn-sm" id="btn-new-audit" style="margin-top:14px" data-i18n="results.new_audit">Nueva auditoría</button>
 </div>
 
 <div class="footer">
-  <strong>Track<em>-Flow</em></strong> · Auditoría de supervivencia de parámetros de tracking
+  <strong>Track<em>-Flow</em></strong> · <span data-i18n="footer.tagline">Auditoría de supervivencia de parámetros de tracking</span>
 </div>
 
 </div>

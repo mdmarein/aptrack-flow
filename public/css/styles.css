@@ -43,6 +43,7 @@ body.light ::-webkit-scrollbar-thumb{background:var(--bhi)}
 .hdr-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
 .btn-hdr-icon{display:flex;align-items:center;justify-content:center;gap:5px;width:30px;height:30px;border-radius:var(--rs);background:transparent;border:1px solid var(--border);color:var(--t1);cursor:pointer;transition:border-color .15s,color .15s}
 .btn-hdr-icon:hover{border-color:var(--bhi);color:var(--t0)}
+.btn-hdr-lang{font-size:11px;font-weight:700;font-family:var(--sans);letter-spacing:.04em}
 
 /* ── Cards ── */
 .card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:10px}

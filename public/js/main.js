@@ -1,5 +1,7 @@
 'use strict';
 
+import { t, applyI18n } from './modules/i18n.js';
+
 const $ = (id) => document.getElementById(id);
 
 // ════════════════════════════════════════════════════════════
@@ -15,7 +17,7 @@ function initTheme() {
     document.body.classList.toggle('light', light);
     sun.style.display = light ? 'block' : 'none';
     moon.style.display = light ? 'none' : 'block';
-    btn.title = light ? 'Cambiar a oscuro' : 'Cambiar a claro';
+    btn.title = light ? t('header.theme_to_dark') : t('header.theme_to_light');
   }
 
   apply(localStorage.getItem(STORAGE_KEY) === 'light');
@@ -24,6 +26,26 @@ function initTheme() {
     const isLight = document.body.classList.toggle('light');
     localStorage.setItem(STORAGE_KEY, isLight ? 'light' : 'dark');
     apply(isLight);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  IDIOMA ES / EN
+// ════════════════════════════════════════════════════════════
+function initLang() {
+  const STORAGE_KEY = 'trackflow-lang';
+  const btn = $('btn-lang');
+  if (!btn) return;
+
+  btn.textContent = t('header.lang_btn');
+  btn.title = t('header.lang_title');
+  btn.setAttribute('aria-label', t('header.lang_title'));
+
+  btn.addEventListener('click', () => {
+    const current = localStorage.getItem(STORAGE_KEY) || 'es';
+    const next = current === 'es' ? 'en' : 'es';
+    localStorage.setItem(STORAGE_KEY, next);
+    location.reload();
   });
 }
 
@@ -85,15 +107,15 @@ function readForm() {
 }
 
 function validate(form) {
-  if (!form.url) return 'Ingresá la URL del sitio a auditar.';
+  if (!form.url) return t('err.url_required');
   try {
     const u = new URL(form.url);
     if (!['http:', 'https:'].includes(u.protocol)) throw new Error();
   } catch {
-    return 'La URL no es válida (debe incluir http:// o https://).';
+    return t('err.url_invalid');
   }
-  if (!form.paramNombre) return 'Ingresá el nombre del parámetro a testear (ej. gclid).';
-  if (!form.paramValor) return 'Ingresá un valor de prueba para el parámetro.';
+  if (!form.paramNombre) return t('err.param_required');
+  if (!form.paramValor) return t('err.value_required');
   return null;
 }
 
@@ -130,7 +152,8 @@ async function runAudit(form) {
   $('prog-ok').textContent = '0';
   $('prog-lost').textContent = '0';
   $('pbar').classList.add('indet');
-  $('progress-status').textContent = 'Rastreando…';
+  $('pbar').style.width = '';
+  $('progress-status').textContent = t('progress.crawling');
 
   showCard('c-progress', true);
   showCard('c-results', false);
@@ -145,14 +168,14 @@ async function runAudit(form) {
     });
   } catch (err) {
     if (err.name === 'AbortError') return;
-    toast('No se pudo conectar con el servidor.');
+    toast(t('toast.connect_error'));
     showCard('c-progress', false);
     return;
   }
 
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    setConfigError(data.error || 'Error al iniciar la auditoría.');
+    setConfigError(data.error || t('toast.start_error'));
     showCard('c-progress', false);
     return;
   }
@@ -175,30 +198,25 @@ async function runAudit(form) {
       }
     }
   } catch (err) {
-    if (err.name !== 'AbortError') toast('Se cortó la conexión con el servidor.');
+    if (err.name !== 'AbortError') toast(t('toast.connection_lost'));
   }
 }
 
 function handleEvent(evt) {
   switch (evt.tipo) {
-    case 'sitemap':
-      addLogRow(evt.esIndice ? '' : 'ok', evt.url, evt.esIndice ? 'índice de sitemaps' : `${evt.encontradas} URL(s)`);
-      break;
-    case 'sitemap_error':
-      addLogRow('', evt.url, evt.error || 'sin sitemap');
-      break;
     case 'fuente':
-      $('progress-status').textContent = evt.fuente === 'sitemap'
-        ? `Rastreando… (sitemap, ${evt.total} URLs)`
-        : `Rastreando… (sin sitemap, siguiendo links, ${evt.total} URLs)`;
+      $('progress-status').textContent = `${t('progress.testing')} (${evt.total} URLs)`;
       break;
     case 'crawl':
       state.visitadas = evt.visitadas;
       $('prog-visitadas').textContent = evt.visitadas;
-      addLogRow('', evt.url, 'rastreando');
+      addLogRow('', evt.url, t('log.crawling'));
       break;
     case 'error_crawl':
-      addLogRow('warn', evt.url, evt.error || 'error');
+      addLogRow('warn', evt.url, evt.error || t('log.error'));
+      break;
+    case 'fallback_curl':
+      addLogRow('', evt.url, t('log.curl_fallback'));
       break;
     case 'test': {
       state.resultados.push(evt);
@@ -206,24 +224,24 @@ function handleEvent(evt) {
       const ok = state.resultados.filter((r) => r.sobrevive).length;
       $('prog-ok').textContent = ok;
       $('prog-lost').textContent = state.resultados.length - ok;
-      addLogRow(evt.sobrevive ? 'ok' : 'err', evt.original, evt.sobrevive ? 'sobrevive' : 'perdido');
+      addLogRow(evt.sobrevive ? 'ok' : 'err', evt.original, evt.sobrevive ? t('log.survives') : t('log.lost'));
       break;
     }
     case 'error_test': {
       state.resultados.push({ ...evt, sobrevive: false, esError: true });
       $('prog-testeadas').textContent = state.resultados.length;
       $('prog-lost').textContent = state.resultados.filter((r) => !r.sobrevive).length;
-      addLogRow('warn', evt.original, evt.error || 'error');
+      addLogRow('warn', evt.original, evt.error || t('log.error'));
       break;
     }
     case 'final':
       $('pbar').classList.remove('indet');
       $('pbar').style.width = '100%';
-      $('progress-status').textContent = 'Completado';
+      $('progress-status').textContent = t('progress.done');
       renderResults(evt);
       break;
     case 'error_fatal':
-      setConfigError(evt.error || 'Error inesperado durante la auditoría.');
+      setConfigError(evt.error || t('toast.fatal_error'));
       showCard('c-progress', false);
       break;
   }
@@ -240,24 +258,23 @@ function renderResults(final) {
   const lost = final.perdidos;
   const redir = final.redirigidos ?? state.resultados.filter((r) => r.redirigida).length;
   const pct = total ? Math.round((ok / total) * 100) : 0;
-  const fuenteLbl = final.fuente === 'sitemap' ? 'vía sitemap' : 'vía rastreo de links';
 
-  $('results-status').textContent = total ? `${pct}% de retención · ${fuenteLbl}` : 'Sin datos';
+  $('results-status').textContent = total ? t('results.retention', pct) : t('results.no_data');
   $('sum-box').innerHTML = `
-    <div class="sum-item"><span class="sum-n">${total}</span><span class="sum-l">URLs testeadas</span></div>
-    <div class="sum-item"><span class="sum-n acc">${ok}</span><span class="sum-l">Sobreviven</span></div>
-    <div class="sum-item"><span class="sum-n redc">${lost}</span><span class="sum-l">Perdidos</span></div>
-    <div class="sum-item"><span class="sum-n dim">${redir}</span><span class="sum-l">Redirigen</span></div>
-    <div class="sum-item"><span class="sum-n dim">${pct}%</span><span class="sum-l">Retención</span></div>
+    <div class="sum-item"><span class="sum-n">${total}</span><span class="sum-l">${t('sum.tested')}</span></div>
+    <div class="sum-item"><span class="sum-n acc">${ok}</span><span class="sum-l">${t('sum.survive')}</span></div>
+    <div class="sum-item"><span class="sum-n redc">${lost}</span><span class="sum-l">${t('sum.lost')}</span></div>
+    <div class="sum-item"><span class="sum-n dim">${redir}</span><span class="sum-l">${t('sum.redirect')}</span></div>
+    <div class="sum-item"><span class="sum-n dim">${pct}%</span><span class="sum-l">${t('sum.retention')}</span></div>
   `;
 
   state.filtro = 'all';
   document.querySelectorAll('.fb').forEach((b) => b.classList.toggle('on', b.dataset.filter === 'all'));
   renderTable();
 
-  if (!total) toast('No se pudo acceder a ninguna URL del sitio. Revisá el log de progreso.');
-  else if (lost > 0) toast(`Auditoría completa: ${lost} URL(s) perdieron el parámetro.`);
-  else toast('Auditoría completa: el parámetro sobrevivió en todas las URLs.');
+  if (!total) toast(t('toast.no_urls'));
+  else if (lost > 0) toast(t('toast.lost_n', lost));
+  else toast(t('toast.all_survive'));
 }
 
 function renderTable() {
@@ -271,20 +288,20 @@ function renderTable() {
   });
 
   if (!rows.length) {
-    body.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-ico">◌</div><div class="empty-msg">No hay resultados para este filtro.</div></div></td></tr>`;
+    body.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-ico">◌</div><div class="empty-msg">${t('empty.no_filter')}</div></div></td></tr>`;
     return;
   }
 
   body.innerHTML = rows.map((r) => {
     const badge = r.esError
-      ? '<span class="badge badge-err">Error</span>'
+      ? `<span class="badge badge-err">${t('badge.error')}</span>`
       : r.sobrevive
-        ? '<span class="badge badge-ok">Sobrevive</span>'
-        : '<span class="badge badge-lost">Perdido</span>';
+        ? `<span class="badge badge-ok">${t('badge.survive')}</span>`
+        : `<span class="badge badge-lost">${t('badge.lost')}</span>`;
     const redirBadge = r.redirigida === true
-      ? '<span class="badge badge-lost">Sí</span>'
+      ? `<span class="badge badge-lost">${t('badge.yes')}</span>`
       : r.redirigida === false
-        ? '<span class="badge badge-ok">No</span>'
+        ? `<span class="badge badge-ok">${t('badge.no')}</span>`
         : '<span class="t-dim">—</span>';
     return `
       <tr>
@@ -308,10 +325,13 @@ function csvEscape(valor) {
 }
 
 function resultadosACsv(resultados) {
-  const encabezado = ['Estado', 'URL original (con parámetro)', 'URL final', '¿Redirige?', 'Status'];
+  const encabezado = [
+    t('table.status'), t('table.url_original'), t('table.url_final'),
+    t('table.redirects'), t('table.http_status'),
+  ];
   const filas = resultados.map((r) => {
-    const estado = r.esError ? 'Error' : r.sobrevive ? 'Sobrevive' : 'Perdido';
-    const redirige = r.redirigida === true ? 'Si' : r.redirigida === false ? 'No' : '';
+    const estado = r.esError ? t('badge.error') : r.sobrevive ? t('badge.survive') : t('badge.lost');
+    const redirige = r.redirigida === true ? t('badge.yes') : r.redirigida === false ? t('badge.no') : '';
     return [estado, r.original, r.final || r.error || '', redirige, r.status ?? ''].map(csvEscape).join(',');
   });
   return [encabezado.join(','), ...filas].join('\r\n');
@@ -329,7 +349,7 @@ function nombreArchivoCsv() {
 }
 
 function descargarCsv() {
-  if (!state.resultados.length) { toast('No hay resultados para descargar.'); return; }
+  if (!state.resultados.length) { toast(t('toast.no_results_dl')); return; }
   const csv = '﻿' + resultadosACsv(state.resultados); // BOM: acentos correctos al abrir en Excel
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
@@ -378,7 +398,9 @@ function initForm() {
   $('btn-download-csv').addEventListener('click', descargarCsv);
 }
 
+applyI18n();
 initTheme();
+initLang();
 initAdvToggle();
 initFilters();
 initForm();
