@@ -1,0 +1,13 @@
+{
+  "name": "track-flow",
+  "version": "0.1.0",
+  "description": "Track-Flow · Auditoría de supervivencia de parámetros de tracking",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

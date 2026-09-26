@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html id="html-root" lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track-Flow · Tracking Param Audit</title>
+<link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/img/favicon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="app">
+
+<div class="sticky-top">
+  <div class="app-inner">
+    <header class="hdr">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L12.5 19.5"/></svg>
+      </div>
+      <div class="hdr-t">
+        <h1>Track<em>-Flow</em></h1>
+        <p>Tracking Param Audit</p>
+      </div>
+      <div class="hdr-actions">
+        <button class="btn-hdr-icon" id="btn-theme" title="Cambiar tema" aria-label="Cambiar tema">
+          <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display:none"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
+          <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </header>
+  </div>
+</div>
+
+<!-- ══ A — CONFIGURAR AUDITORÍA ══ -->
+<div class="card" id="c-config">
+  <div class="card-title">A — Configurar Auditoría<span class="card-status" id="config-status"></span></div>
+
+  <div class="field-row">
+    <div class="field" style="flex:2">
+      <label for="f-url">URL del sitio a auditar</label>
+      <input type="url" id="f-url" placeholder="https://ejemplo.com/landing">
+      <span class="field-hint">Se rastrean solo links internos del mismo dominio.</span>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="f-param-nombre">Parámetro a testear</label>
+      <input type="text" id="f-param-nombre" placeholder="gclid" value="gclid">
+    </div>
+    <div class="field">
+      <label for="f-param-valor">Valor de prueba</label>
+      <input type="text" id="f-param-valor" placeholder="tf-test-12345" value="tf-test-12345">
+    </div>
+  </div>
+
+  <div class="adv-toggle" id="adv-toggle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    Opciones avanzadas
+  </div>
+  <div class="adv-body" id="adv-body">
+    <div class="field-row">
+      <div class="field">
+        <label for="f-max-urls">Máx. URLs a rastrear</label>
+        <input type="number" id="f-max-urls" min="1" max="200" value="30">
+      </div>
+      <div class="field">
+        <label for="f-delay">Delay entre requests (ms)</label>
+        <input type="number" id="f-delay" min="0" max="5000" step="50" value="300">
+      </div>
+      <div class="field">
+        <label for="f-timeout">Timeout por request (ms)</label>
+        <input type="number" id="f-timeout" min="1000" max="30000" step="500" value="8000">
+      </div>
+    </div>
+  </div>
+
+  <div id="config-error" class="err-box hidden"></div>
+
+  <button class="btn btn-p btn-full" id="btn-start">Iniciar auditoría</button>
+</div>
+
+<!-- ══ B — PROGRESO EN VIVO ══ -->
+<div class="card hidden" id="c-progress">
+  <div class="card-title">B — Progreso en vivo<span class="card-status" id="progress-status">Rastreando…</span></div>
+
+  <div class="prog-summary">
+    <div class="prog-item"><span class="prog-n" id="prog-visitadas">0</span><span class="prog-l">URLs visitadas</span></div>
+    <div class="prog-item"><span class="prog-n" id="prog-testeadas">0</span><span class="prog-l">Testeadas</span></div>
+    <div class="prog-item"><span class="prog-n acc" id="prog-ok">0</span><span class="prog-l">Sobreviven</span></div>
+    <div class="prog-item"><span class="prog-n redc" id="prog-lost">0</span><span class="prog-l">Perdidos</span></div>
+  </div>
+
+  <div class="pbar-bg"><div class="pbar-fg indet" id="pbar"></div></div>
+
+  <div class="log" id="log"></div>
+
+  <button class="btn btn-g btn-sm" id="btn-cancel" style="margin-top:12px">Cancelar</button>
+</div>
+
+<!-- ══ C — RESULTADOS ══ -->
+<div class="card hidden" id="c-results">
+  <div class="card-title">C — Resultados<span class="card-status" id="results-status"></span></div>
+
+  <div class="sum-box" id="sum-box"></div>
+
+  <div class="atb">
+    <button class="btn btn-g btn-sm" id="btn-download-csv">Descargar CSV</button>
+    <span class="sp"></span>
+    <button class="fb on" data-filter="all">Todos</button>
+    <button class="fb" data-filter="ok">Sobreviven</button>
+    <button class="fb" data-filter="lost">Perdidos</button>
+    <button class="fb" data-filter="redir">Redirigen</button>
+    <button class="fb" data-filter="err">Errores</button>
+  </div>
+
+  <div class="twrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Estado</th>
+          <th>URL original (con parámetro)</th>
+          <th>URL final</th>
+          <th>¿Redirige?</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+  </div>
+
+  <button class="btn btn-g btn-sm" id="btn-new-audit" style="margin-top:14px">Nueva auditoría</button>
+</div>
+
+<div class="footer">
+  <strong>Track<em>-Flow</em></strong> · Auditoría de supervivencia de parámetros de tracking
+</div>
+
+</div>
+
+<div class="toast" id="toast"><span class="toast-dot"></span><span id="toast-msg"></span></div>
+
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>
