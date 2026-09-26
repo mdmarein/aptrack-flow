@@ -320,12 +320,15 @@ function renderTable() {
       : r.esError
         ? '<span class="t-dim">—</span>'
         : `<span class="badge badge-ok">${t('badge.no')}</span>`;
+    const finalEstimadoRow = r.finalEstimadoTrasJs
+      ? `<div class="t-estimate" title="${escapeHtml(t('table.js_estimated_title'))}">${escapeHtml(t('table.js_estimated', r.finalEstimadoTrasJs))}</div>`
+      : '';
     return `
       <tr>
         <td class="mono t-dim">${i + 1}</td>
         <td>${badge}</td>
         <td class="mono t-url" title="${escapeHtml(r.original)}">${escapeHtml(r.original)}</td>
-        <td class="mono t-url" title="${escapeHtml(r.final || '')}">${escapeHtml(r.final || r.error || '—')}</td>
+        <td class="mono t-url" title="${escapeHtml(r.final || '')}">${escapeHtml(r.final || r.error || '—')}${finalEstimadoRow}</td>
         <td>${redirBadge}</td>
         <td>${jsWarnBadge}</td>
         <td class="mono">${r.status ?? '—'}</td>
@@ -346,13 +349,16 @@ function csvEscape(valor) {
 function resultadosACsv(resultados) {
   const encabezado = [
     '#', t('table.status'), t('table.url_original'), t('table.url_final'),
-    t('table.redirects'), t('table.js_warn'), t('table.http_status'),
+    t('table.redirects'), t('table.js_warn'), t('table.js_estimated_header'), t('table.http_status'),
   ];
   const filas = resultados.map((r, i) => {
     const estado = r.esError ? t('badge.error') : !esPerdidoEfectivo(r) ? t('badge.survive') : t('badge.lost');
     const redirige = r.redirigida === true ? t('badge.yes') : r.redirigida === false ? t('badge.no') : '';
     const limpiezaJs = r.esError ? '' : r.posibleLimpiezaJs ? t('badge.yes') : t('badge.no');
-    return [i + 1, estado, r.original, r.final || r.error || '', redirige, limpiezaJs, r.status ?? ''].map(csvEscape).join(',');
+    return [
+      i + 1, estado, r.original, r.final || r.error || '', redirige, limpiezaJs,
+      r.finalEstimadoTrasJs || '', r.status ?? '',
+    ].map(csvEscape).join(',');
   });
   return [encabezado.join(','), ...filas].join('\r\n');
 }

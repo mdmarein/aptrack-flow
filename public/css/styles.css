@@ -135,6 +135,7 @@ tbody tr:hover{background:var(--s2)}
 td{padding:8px 10px;vertical-align:middle}
 .mono{font-family:var(--mono);font-size:11.5px;font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0,"dlig" 0}
 .t-url{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t1)}
+.t-estimate{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t2);font-size:10px;font-style:italic;margin-top:2px;cursor:help}
 .t-dim{color:var(--t2)}
 
 /* ── Badges ── */
