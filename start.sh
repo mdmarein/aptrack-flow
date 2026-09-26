@@ -1,8 +1,8 @@
 #!/bin/bash
-# Track-Flow · Tracking Param Audit — Script de inicio (Mac/Linux)
+# APTrack-Flow · Tracking Param Audit — Script de inicio (Mac/Linux)
 
 echo ""
-echo "  🔗  Track-Flow · Tracking Param Audit"
+echo "  🔗  APTrack-Flow · Tracking Param Audit"
 echo "  ─────────────────────────────────"
 
 # Verificar Node.js

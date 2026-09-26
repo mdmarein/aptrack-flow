@@ -1,6 +1,6 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────────
-#  Track-Flow — Crea "Track-Flow.app" en el Desktop (macOS)
+#  APTrack-Flow — Crea "APTrack-Flow.app" en el Desktop (macOS)
 #  Uso: bash tools/make-mac-app.sh
 # ─────────────────────────────────────────────────────────────
 
@@ -9,7 +9,7 @@ set -e
 # Directorio raíz del proyecto (donde está este script)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-APP_NAME="Track-Flow"
+APP_NAME="APTrack-Flow"
 DEST="$HOME/Desktop/${APP_NAME}.app"
 ICNS="$SCRIPT_DIR/icons/AppIcon.icns"
 
@@ -29,11 +29,11 @@ cat > "$DEST/Contents/Info.plist" << PLIST
   "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>CFBundleExecutable</key>      <string>track-flow</string>
+  <key>CFBundleExecutable</key>      <string>aptrack-flow</string>
   <key>CFBundleIconFile</key>        <string>AppIcon</string>
-  <key>CFBundleIdentifier</key>      <string>ai.multiplai.track-flow</string>
-  <key>CFBundleName</key>            <string>Track-Flow</string>
-  <key>CFBundleDisplayName</key>     <string>Track-Flow</string>
+  <key>CFBundleIdentifier</key>      <string>ai.multiplai.aptrack-flow</string>
+  <key>CFBundleName</key>            <string>APTrack-Flow</string>
+  <key>CFBundleDisplayName</key>     <string>APTrack-Flow</string>
   <key>CFBundleVersion</key>         <string>1.0</string>
   <key>CFBundleShortVersionString</key><string>1.0</string>
   <key>CFBundlePackageType</key>     <string>APPL</string>
@@ -46,7 +46,7 @@ PLIST
 
 # ── Launcher script ───────────────────────────────────────────
 # El PROJECT_DIR se incrusta en el momento de la creación del .app
-cat > "$DEST/Contents/MacOS/track-flow" << LAUNCHER
+cat > "$DEST/Contents/MacOS/aptrack-flow" << LAUNCHER
 #!/bin/bash
 PROJECT_DIR="${PROJECT_DIR}"
 PORT=3300
@@ -58,7 +58,7 @@ for candidate in \$(which node 2>/dev/null) /usr/local/bin/node /opt/homebrew/bi
 done
 
 if [ -z "\$NODE" ]; then
-  osascript -e 'display alert "Track-Flow" message "No se encontró Node.js. Instalalo desde nodejs.org" as critical'
+  osascript -e 'display alert "APTrack-Flow" message "No se encontró Node.js. Instalalo desde nodejs.org" as critical'
   exit 1
 fi
 
@@ -93,11 +93,11 @@ for i in {1..16}; do
 done
 
 # Si no levantó, mostrar error
-osascript -e 'display alert "Track-Flow" message "El servidor no arrancó. Revisá server.log en el directorio del proyecto." as critical'
+osascript -e 'display alert "APTrack-Flow" message "El servidor no arrancó. Revisá server.log en el directorio del proyecto." as critical'
 exit 1
 LAUNCHER
 
-chmod +x "$DEST/Contents/MacOS/track-flow"
+chmod +x "$DEST/Contents/MacOS/aptrack-flow"
 
 # ── Ícono ─────────────────────────────────────────────────────
 if [ -f "$ICNS" ]; then

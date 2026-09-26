@@ -1,6 +1,6 @@
 @echo off
 echo.
-echo   [Track-Flow] Tracking Param Audit
+echo   [APTrack-Flow] Tracking Param Audit
 echo   -------------------------------------------
 
 where node >nul 2>&1

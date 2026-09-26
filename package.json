@@ -1,7 +1,7 @@
 {
-  "name": "track-flow",
+  "name": "aptrack-flow",
   "version": "0.1.0",
-  "description": "Track-Flow · Auditoría de supervivencia de parámetros de tracking",
+  "description": "APTrack-Flow · Auditoría de supervivencia de parámetros de tracking",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

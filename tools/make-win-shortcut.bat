@@ -1,6 +1,6 @@
 @echo off
 :: ─────────────────────────────────────────────────────────────
-::  Track-Flow — Crea acceso directo en el Desktop (Windows)
+::  APTrack-Flow — Crea acceso directo en el Desktop (Windows)
 ::  Uso: doble clic en este archivo
 :: ─────────────────────────────────────────────────────────────
 
@@ -12,8 +12,8 @@ set "TOOLS_DIR=%TOOLS_DIR:~0,-1%"
 for %%I in ("%TOOLS_DIR%\..") do set "PROJECT_DIR=%%~fI"
 
 set "VBS_FILE=%TOOLS_DIR%\launch-windows.vbs"
-set "ICO_FILE=%TOOLS_DIR%\icons\track-flow.ico"
-set "SHORTCUT_NAME=Track-Flow"
+set "ICO_FILE=%TOOLS_DIR%\icons\aptrack-flow.ico"
+set "SHORTCUT_NAME=APTrack-Flow"
 
 :: Obtener ruta al Desktop del usuario
 for /f "tokens=*" %%D in ('powershell -NoProfile -Command "[Environment]::GetFolderPath(\"Desktop\")"') do set "DESKTOP=%%D"
@@ -30,14 +30,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
    $sc.Arguments = '\""%VBS_FILE%"\"'; ^
    $sc.WorkingDirectory = '%PROJECT_DIR%'; ^
    $sc.IconLocation = '"%ICO_FILE%",0'; ^
-   $sc.Description = 'Track-Flow - Tracking Param Audit'; ^
+   $sc.Description = 'APTrack-Flow - Tracking Param Audit'; ^
    $sc.WindowStyle = 1; ^
    $sc.Save()"
 
 if exist "%SHORTCUT_PATH%" (
   echo.
   echo [OK] Acceso directo creado en el Desktop.
-  echo      Doble clic en "Track-Flow" para iniciar la app.
+  echo      Doble clic en "APTrack-Flow" para iniciar la app.
 ) else (
   echo.
   echo [ERROR] No se pudo crear el acceso directo.

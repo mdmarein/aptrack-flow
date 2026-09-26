@@ -1,5 +1,5 @@
 ' ─────────────────────────────────────────────────────────────
-'  Track-Flow — Lanzador silencioso para Windows
+'  APTrack-Flow — Lanzador silencioso para Windows
 '  (Sin ventana de terminal negra)
 ' ─────────────────────────────────────────────────────────────
 
@@ -50,7 +50,7 @@ End If
 If nodeExe = "" Then
   MsgBox "No se encontro Node.js." & vbCrLf & vbCrLf & _
          "Instala Node.js desde https://nodejs.org", _
-         vbCritical + vbOKOnly, "Track-Flow"
+         vbCritical + vbOKOnly, "APTrack-Flow"
   WScript.Quit 1
 End If
 
@@ -98,7 +98,7 @@ Loop
 
 If attempts >= 16 Then
   MsgBox "El servidor no arranco. Revisa server.log en el directorio del proyecto.", _
-         vbCritical + vbOKOnly, "Track-Flow"
+         vbCritical + vbOKOnly, "APTrack-Flow"
   WScript.Quit 1
 End If
 

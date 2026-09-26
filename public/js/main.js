@@ -8,7 +8,7 @@ const $ = (id) => document.getElementById(id);
 //  TEMA CLARO / OSCURO
 // ════════════════════════════════════════════════════════════
 function initTheme() {
-  const STORAGE_KEY = 'trackflow-theme';
+  const STORAGE_KEY = 'aptrackflow-theme';
   const btn = $('btn-theme');
   const sun = $('theme-icon-sun');
   const moon = $('theme-icon-moon');
@@ -33,7 +33,7 @@ function initTheme() {
 //  IDIOMA ES / EN
 // ════════════════════════════════════════════════════════════
 function initLang() {
-  const STORAGE_KEY = 'trackflow-lang';
+  const STORAGE_KEY = 'aptrackflow-lang';
   const btn = $('btn-lang');
   if (!btn) return;
 

@@ -1,5 +1,5 @@
 /**
- * Track-Flow · Tracking Param Audit · Servidor HTTP local — sin dependencias npm
+ * APTrack-Flow · Tracking Param Audit · Servidor HTTP local — sin dependencias npm
  * Requiere: Node.js >= 18
  */
 
@@ -144,7 +144,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, '127.0.0.1', () => {
   const addr = `http://localhost:${PORT}`;
-  console.log(`\n  Track-Flow · Tracking Param Audit`);
+  console.log(`\n  APTrack-Flow · Tracking Param Audit`);
   console.log(`  ───────────────────────────────────────`);
   console.log(`  Servidor: ${addr}\n`);
   const cmd = process.platform === 'darwin' ? `open ${addr}`

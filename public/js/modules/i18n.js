@@ -1,13 +1,13 @@
 /**
  * i18n.js — Internacionalización ES / EN
- * Track-Flow · Tracking Param Audit
+ * APTrack-Flow · Tracking Param Audit
  *
- * window.__TRACKFLOW_LANG debe ser seteado por el inline <script> en
+ * window.__APTRACKFLOW_LANG debe ser seteado por el inline <script> en
  * index.html antes de que este módulo se cargue, para que LANG se
  * resuelva correctamente.
  */
 
-export const LANG = (typeof window !== 'undefined' ? window.__TRACKFLOW_LANG : null) || 'es';
+export const LANG = (typeof window !== 'undefined' ? window.__APTRACKFLOW_LANG : null) || 'es';
 
 const DICT = {
   es: {
