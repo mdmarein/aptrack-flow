@@ -300,11 +300,11 @@ function renderTable() {
   });
 
   if (!rows.length) {
-    body.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-ico">◌</div><div class="empty-msg">${t('empty.no_filter')}</div></div></td></tr>`;
+    body.innerHTML = `<tr><td colspan="7"><div class="empty"><div class="empty-ico">◌</div><div class="empty-msg">${t('empty.no_filter')}</div></div></td></tr>`;
     return;
   }
 
-  body.innerHTML = rows.map((r) => {
+  body.innerHTML = rows.map((r, i) => {
     const badge = r.esError
       ? `<span class="badge badge-err">${t('badge.error')}</span>`
       : !esPerdidoEfectivo(r)
@@ -322,6 +322,7 @@ function renderTable() {
         : `<span class="badge badge-ok">${t('badge.no')}</span>`;
     return `
       <tr>
+        <td class="mono t-dim">${i + 1}</td>
         <td>${badge}</td>
         <td class="mono t-url" title="${escapeHtml(r.original)}">${escapeHtml(r.original)}</td>
         <td class="mono t-url" title="${escapeHtml(r.final || '')}">${escapeHtml(r.final || r.error || '—')}</td>
@@ -344,14 +345,14 @@ function csvEscape(valor) {
 
 function resultadosACsv(resultados) {
   const encabezado = [
-    t('table.status'), t('table.url_original'), t('table.url_final'),
+    '#', t('table.status'), t('table.url_original'), t('table.url_final'),
     t('table.redirects'), t('table.js_warn'), t('table.http_status'),
   ];
-  const filas = resultados.map((r) => {
+  const filas = resultados.map((r, i) => {
     const estado = r.esError ? t('badge.error') : !esPerdidoEfectivo(r) ? t('badge.survive') : t('badge.lost');
     const redirige = r.redirigida === true ? t('badge.yes') : r.redirigida === false ? t('badge.no') : '';
     const limpiezaJs = r.esError ? '' : r.posibleLimpiezaJs ? t('badge.yes') : t('badge.no');
-    return [estado, r.original, r.final || r.error || '', redirige, limpiezaJs, r.status ?? ''].map(csvEscape).join(',');
+    return [i + 1, estado, r.original, r.final || r.error || '', redirige, limpiezaJs, r.status ?? ''].map(csvEscape).join(',');
   });
   return [encabezado.join(','), ...filas].join('\r\n');
 }

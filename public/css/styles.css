@@ -127,6 +127,7 @@ input::placeholder{color:var(--t2)}
 /* ── Tabla resultados ── */
 .twrap{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--border);max-height:460px;overflow-y:auto}
 table{width:100%;border-collapse:separate;border-spacing:0}
+th:first-child,td:first-child{width:34px;text-align:right}
 .twrap thead{position:sticky;top:0;z-index:10}
 .twrap th{background-color:var(--s2);box-shadow:0 1px 0 var(--border);padding:8px 10px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--t2);white-space:nowrap}
 tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
