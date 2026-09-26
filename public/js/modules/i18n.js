@@ -84,9 +84,8 @@ const DICT = {
     'badge.yes':             'Sí',
     'badge.no':              'No',
     'badge.warn_title':      'El servidor entrega el parámetro, pero esta página lo borra de la URL con JavaScript (history.replaceState/pushState) apenas carga — un navegador real podría perderlo. Verificá manualmente.',
-    'table.js_estimated':    (url) => `→ estimado tras limpieza JS: ${url}`,
+    'table.js_estimated':    (url) => `estimado tras limpieza JS: ${url}`,
     'table.js_estimated_title': 'Estimación heurística: asume que el script borra todo el query string. No se ejecutó el JS real — el sitio podría comportarse distinto.',
-    'table.js_estimated_header': 'URL final estimada (post-JS)',
 
     'empty.no_filter':       'No hay resultados para este filtro.',
 
@@ -186,9 +185,8 @@ const DICT = {
     'badge.yes':             'Yes',
     'badge.no':              'No',
     'badge.warn_title':      'The server delivers the parameter, but this page strips it from the URL with JavaScript (history.replaceState/pushState) right after loading — a real browser could lose it. Verify manually.',
-    'table.js_estimated':    (url) => `→ estimated after JS cleanup: ${url}`,
+    'table.js_estimated':    (url) => `estimated after JS cleanup: ${url}`,
     'table.js_estimated_title': 'Heuristic estimate: assumes the script strips the whole query string. The real JS was not executed — the site could behave differently.',
-    'table.js_estimated_header': 'Estimated final URL (post-JS)',
 
     'empty.no_filter':       'No results for this filter.',
 

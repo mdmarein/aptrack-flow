@@ -323,15 +323,20 @@ function renderTable() {
       : r.esError
         ? '<span class="t-dim">—</span>'
         : `<span class="badge badge-ok">${t('badge.no')}</span>`;
-    const finalEstimadoRow = r.finalEstimadoTrasJs
-      ? `<div class="t-estimate" title="${escapeHtml(t('table.js_estimated_title'))}">${escapeHtml(t('table.js_estimated', r.finalEstimadoTrasJs))}</div>`
-      : '';
+    // Si se detectó limpieza JS, mostramos directamente la URL estimada
+    // (sin el parámetro) en vez de la URL cruda que devolvió el servidor —
+    // es lo que realmente va a ver el usuario en la barra de direcciones.
+    const finalUrlMostrada = r.finalEstimadoTrasJs || r.final || r.error || '—';
+    const finalUrlClase = r.finalEstimadoTrasJs ? 'mono t-url t-estimate' : 'mono t-url';
+    const finalUrlTitle = r.finalEstimadoTrasJs
+      ? `${t('table.js_estimated_title')}\n\n${t('table.js_estimated', r.finalEstimadoTrasJs)}\n${t('table.url_final')} (HTTP): ${r.final || ''}`
+      : (r.final || '');
     return `
       <tr>
         <td class="mono t-dim">${i + 1}</td>
         <td>${badge}</td>
         <td class="mono t-url" title="${escapeHtml(r.original)}">${escapeHtml(r.original)}</td>
-        <td class="mono t-url" title="${escapeHtml(r.final || '')}">${escapeHtml(r.final || r.error || '—')}${finalEstimadoRow}</td>
+        <td class="${finalUrlClase}" title="${escapeHtml(finalUrlTitle)}">${escapeHtml(finalUrlMostrada)}</td>
         <td>${redirBadge}</td>
         <td>${jsWarnBadge}</td>
         <td class="mono">${r.status ?? '—'}</td>
@@ -352,16 +357,17 @@ function csvEscape(valor) {
 function resultadosACsv(resultados) {
   const encabezado = [
     '#', t('table.status'), t('table.url_original'), t('table.url_final'),
-    t('table.redirects'), t('table.js_warn'), t('table.js_estimated_header'), t('table.http_status'),
+    t('table.redirects'), t('table.js_warn'), t('table.http_status'),
   ];
   const filas = resultados.map((r, i) => {
     const estado = r.esError ? t('badge.error') : !esPerdidoEfectivo(r) ? t('badge.survive') : t('badge.lost');
     const redirige = r.redirigida === true ? t('badge.yes') : r.redirigida === false ? t('badge.no') : '';
     const limpiezaJs = r.esError ? '' : r.posibleLimpiezaJs ? t('badge.yes') : t('badge.no');
-    return [
-      i + 1, estado, r.original, r.final || r.error || '', redirige, limpiezaJs,
-      r.finalEstimadoTrasJs || '', r.status ?? '',
-    ].map(csvEscape).join(',');
+    // Si hay limpieza JS detectada, se exporta la URL estimada (sin el
+    // parámetro) en vez de la URL cruda del chequeo HTTP — misma lógica
+    // que la tabla, misma columna.
+    const finalMostrado = r.finalEstimadoTrasJs || r.final || r.error || '';
+    return [i + 1, estado, r.original, finalMostrado, redirige, limpiezaJs, r.status ?? ''].map(csvEscape).join(',');
   });
   return [encabezado.join(','), ...filas].join('\r\n');
 }
