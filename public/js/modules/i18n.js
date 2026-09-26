@@ -61,18 +61,21 @@ const DICT = {
     'sum.survive':           'Sobreviven',
     'sum.lost':              'Perdidos',
     'sum.redirect':          'Redirigen',
+    'sum.warn':              'A verificar',
     'sum.retention':         'Retención',
 
     'filter.all':            'Todos',
     'filter.survive':        'Sobreviven',
     'filter.lost':           'Perdidos',
     'filter.redirect':       'Redirigen',
+    'filter.warn':           'A verificar',
     'filter.errors':         'Errores',
 
     'table.status':          'Estado',
     'table.url_original':    'URL original (con parámetro)',
     'table.url_final':       'URL final',
     'table.redirects':       '¿Redirige?',
+    'table.js_warn':         '¿Limpieza JS?',
     'table.http_status':     'Status',
 
     'badge.survive':         'Sobrevive',
@@ -80,6 +83,7 @@ const DICT = {
     'badge.error':           'Error',
     'badge.yes':             'Sí',
     'badge.no':              'No',
+    'badge.warn_title':      'El servidor entrega el parámetro, pero esta página lo borra de la URL con JavaScript (history.replaceState/pushState) apenas carga — un navegador real podría perderlo. Verificá manualmente.',
 
     'empty.no_filter':       'No hay resultados para este filtro.',
 
@@ -96,6 +100,8 @@ const DICT = {
     'toast.fatal_error':     'Error inesperado durante la auditoría.',
     'toast.no_urls':         'No se pudo acceder a ninguna URL del sitio. Revisá el log de progreso.',
     'toast.lost_n':          (n) => `Auditoría completa: ${n} URL(s) perdieron el parámetro.`,
+    'toast.lost_and_warn_n': (lost, warn) => `Auditoría completa: ${lost} URL(s) perdieron el parámetro · ${warn} a verificar manualmente (limpieza por JS).`,
+    'toast.warn_n':          (n) => `Auditoría completa: ${n} URL(s) a verificar manualmente (posible limpieza de URL por JS).`,
     'toast.all_survive':     'Auditoría completa: el parámetro sobrevivió en todas las URLs.',
     'toast.no_results_dl':   'No hay resultados para descargar.',
 
@@ -154,18 +160,21 @@ const DICT = {
     'sum.survive':           'Survive',
     'sum.lost':              'Lost',
     'sum.redirect':          'Redirect',
+    'sum.warn':              'To check',
     'sum.retention':         'Retention',
 
     'filter.all':            'All',
     'filter.survive':        'Survive',
     'filter.lost':           'Lost',
     'filter.redirect':       'Redirect',
+    'filter.warn':           'To check',
     'filter.errors':         'Errors',
 
     'table.status':          'Status',
     'table.url_original':    'Original URL (with param)',
     'table.url_final':       'Final URL',
     'table.redirects':       'Redirects?',
+    'table.js_warn':         'JS cleanup?',
     'table.http_status':     'HTTP',
 
     'badge.survive':         'Survives',
@@ -173,6 +182,7 @@ const DICT = {
     'badge.error':           'Error',
     'badge.yes':             'Yes',
     'badge.no':              'No',
+    'badge.warn_title':      'The server delivers the parameter, but this page strips it from the URL with JavaScript (history.replaceState/pushState) right after loading — a real browser could lose it. Verify manually.',
 
     'empty.no_filter':       'No results for this filter.',
 
@@ -189,6 +199,8 @@ const DICT = {
     'toast.fatal_error':     'Unexpected error during the audit.',
     'toast.no_urls':         'Could not reach any URL on the site. Check the progress log.',
     'toast.lost_n':          (n) => `Audit complete: ${n} URL(s) lost the parameter.`,
+    'toast.lost_and_warn_n': (lost, warn) => `Audit complete: ${lost} URL(s) lost the parameter · ${warn} to verify manually (possible JS cleanup).`,
+    'toast.warn_n':          (n) => `Audit complete: ${n} URL(s) to verify manually (possible JS URL cleanup).`,
     'toast.all_survive':     'Audit complete: the parameter survived on every URL.',
     'toast.no_results_dl':   'No results to download.',
 

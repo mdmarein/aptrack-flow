@@ -257,6 +257,7 @@ function renderResults(final) {
   const ok = final.sobreviven;
   const lost = final.perdidos;
   const redir = final.redirigidos ?? state.resultados.filter((r) => r.redirigida).length;
+  const warn = final.advertencias ?? state.resultados.filter((r) => r.posibleLimpiezaJs).length;
   const pct = total ? Math.round((ok / total) * 100) : 0;
 
   $('results-status').textContent = total ? t('results.retention', pct) : t('results.no_data');
@@ -265,6 +266,7 @@ function renderResults(final) {
     <div class="sum-item"><span class="sum-n acc">${ok}</span><span class="sum-l">${t('sum.survive')}</span></div>
     <div class="sum-item"><span class="sum-n redc">${lost}</span><span class="sum-l">${t('sum.lost')}</span></div>
     <div class="sum-item"><span class="sum-n dim">${redir}</span><span class="sum-l">${t('sum.redirect')}</span></div>
+    <div class="sum-item"><span class="sum-n" style="color:var(--warn)">${warn}</span><span class="sum-l">${t('sum.warn')}</span></div>
     <div class="sum-item"><span class="sum-n dim">${pct}%</span><span class="sum-l">${t('sum.retention')}</span></div>
   `;
 
@@ -273,7 +275,9 @@ function renderResults(final) {
   renderTable();
 
   if (!total) toast(t('toast.no_urls'));
+  else if (lost > 0 && warn > 0) toast(t('toast.lost_and_warn_n', lost, warn));
   else if (lost > 0) toast(t('toast.lost_n', lost));
+  else if (warn > 0) toast(t('toast.warn_n', warn));
   else toast(t('toast.all_survive'));
 }
 
@@ -284,11 +288,12 @@ function renderTable() {
     if (state.filtro === 'lost') return !r.sobrevive && !r.esError;
     if (state.filtro === 'err') return !!r.esError;
     if (state.filtro === 'redir') return r.redirigida === true;
+    if (state.filtro === 'warn') return r.posibleLimpiezaJs === true;
     return true;
   });
 
   if (!rows.length) {
-    body.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-ico">◌</div><div class="empty-msg">${t('empty.no_filter')}</div></div></td></tr>`;
+    body.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-ico">◌</div><div class="empty-msg">${t('empty.no_filter')}</div></div></td></tr>`;
     return;
   }
 
@@ -303,12 +308,18 @@ function renderTable() {
       : r.redirigida === false
         ? `<span class="badge badge-ok">${t('badge.no')}</span>`
         : '<span class="t-dim">—</span>';
+    const jsWarnBadge = r.posibleLimpiezaJs
+      ? `<span class="badge badge-warn" title="${escapeHtml(t('badge.warn_title'))}">${t('badge.yes')}</span>`
+      : r.esError
+        ? '<span class="t-dim">—</span>'
+        : `<span class="badge badge-ok">${t('badge.no')}</span>`;
     return `
       <tr>
         <td>${badge}</td>
         <td class="mono t-url" title="${escapeHtml(r.original)}">${escapeHtml(r.original)}</td>
         <td class="mono t-url" title="${escapeHtml(r.final || '')}">${escapeHtml(r.final || r.error || '—')}</td>
         <td>${redirBadge}</td>
+        <td>${jsWarnBadge}</td>
         <td class="mono">${r.status ?? '—'}</td>
       </tr>
     `;
@@ -327,12 +338,13 @@ function csvEscape(valor) {
 function resultadosACsv(resultados) {
   const encabezado = [
     t('table.status'), t('table.url_original'), t('table.url_final'),
-    t('table.redirects'), t('table.http_status'),
+    t('table.redirects'), t('table.js_warn'), t('table.http_status'),
   ];
   const filas = resultados.map((r) => {
     const estado = r.esError ? t('badge.error') : r.sobrevive ? t('badge.survive') : t('badge.lost');
     const redirige = r.redirigida === true ? t('badge.yes') : r.redirigida === false ? t('badge.no') : '';
-    return [estado, r.original, r.final || r.error || '', redirige, r.status ?? ''].map(csvEscape).join(',');
+    const limpiezaJs = r.esError ? '' : r.posibleLimpiezaJs ? t('badge.yes') : t('badge.no');
+    return [estado, r.original, r.final || r.error || '', redirige, limpiezaJs, r.status ?? ''].map(csvEscape).join(',');
   });
   return [encabezado.join(','), ...filas].join('\r\n');
 }
