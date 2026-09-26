@@ -54,51 +54,52 @@ If nodeExe = "" Then
   WScript.Quit 1
 End If
 
-' ── Verificar si el servidor ya está corriendo ────────────────
-Dim oCheck
+' ── Matar cualquier instancia previa en el puerto ──────────────
+' Node cachea los modulos require() en memoria al arrancar, asi que un
+' proceso viejo sigue sirviendo codigo desactualizado aunque los archivos
+' del proyecto ya se hayan actualizado. Reiniciar siempre garantiza que
+' se cargue la version actual del motor de auditoria.
+Dim oCheck, line, oldPid, parts
 Set oCheck = WshShell.Exec("cmd /c netstat -ano | findstr :" & port & ".*LISTENING")
 WScript.Sleep 500
-Dim isRunning
-isRunning = False
 Do While Not oCheck.StdOut.AtEndOfStream
-  Dim line
-  line = oCheck.StdOut.ReadLine()
+  line = Trim(oCheck.StdOut.ReadLine())
   If InStr(line, "LISTENING") > 0 Then
-    isRunning = True
-    Exit Do
+    parts = Split(line, " ")
+    oldPid = parts(UBound(parts))
+    WshShell.Run "cmd /c taskkill /F /PID " & oldPid, 0, True
   End If
 Loop
+WScript.Sleep 500
 
-' ── Arrancar servidor si no está corriendo ────────────────────
-If Not isRunning Then
-  Dim cmd
-  cmd = "cmd /c cd /d """ & projectDir & """ && """ & nodeExe & """ server.js >> server.log 2>&1"
-  WshShell.Run cmd, 0, False   ' 0 = ventana oculta, False = no esperar
+' ── Arrancar servidor ──────────────────────────────────────────
+Dim cmd
+cmd = "cmd /c cd /d """ & projectDir & """ && """ & nodeExe & """ server.js >> server.log 2>&1"
+WshShell.Run cmd, 0, False   ' 0 = ventana oculta, False = no esperar
 
-  ' Esperar hasta 8 segundos a que el puerto esté activo
-  Dim attempts
-  attempts = 0
-  Do While attempts < 16
-    WScript.Sleep 500
-    Set oCheck = WshShell.Exec("cmd /c netstat -ano | findstr :" & port & ".*LISTENING")
-    WScript.Sleep 300
-    Dim ready
-    ready = False
-    Do While Not oCheck.StdOut.AtEndOfStream
-      If InStr(oCheck.StdOut.ReadLine(), "LISTENING") > 0 Then
-        ready = True
-        Exit Do
-      End If
-    Loop
-    If ready Then Exit Do
-    attempts = attempts + 1
+' Esperar hasta 8 segundos a que el puerto esté activo
+Dim attempts
+attempts = 0
+Do While attempts < 16
+  WScript.Sleep 500
+  Set oCheck = WshShell.Exec("cmd /c netstat -ano | findstr :" & port & ".*LISTENING")
+  WScript.Sleep 300
+  Dim ready
+  ready = False
+  Do While Not oCheck.StdOut.AtEndOfStream
+    If InStr(oCheck.StdOut.ReadLine(), "LISTENING") > 0 Then
+      ready = True
+      Exit Do
+    End If
   Loop
+  If ready Then Exit Do
+  attempts = attempts + 1
+Loop
 
-  If attempts >= 16 Then
-    MsgBox "El servidor no arranco. Revisa server.log en el directorio del proyecto.", _
-           vbCritical + vbOKOnly, "Track-Flow"
-    WScript.Quit 1
-  End If
+If attempts >= 16 Then
+  MsgBox "El servidor no arranco. Revisa server.log en el directorio del proyecto.", _
+         vbCritical + vbOKOnly, "Track-Flow"
+  WScript.Quit 1
 End If
 
 ' ── Abrir browser ─────────────────────────────────────────────

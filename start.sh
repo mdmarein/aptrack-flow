@@ -26,5 +26,22 @@ fi
 echo "  Node.js $(node --version) ✓"
 echo ""
 
+# Matar cualquier instancia previa en el puerto — Node cachea los módulos
+# require() en memoria al arrancar, así que un proceso viejo sigue sirviendo
+# código desactualizado aunque los archivos en disco ya se hayan actualizado.
+PORT="${PORT:-3300}"
+OLD_PIDS=$(lsof -ti tcp:"$PORT" 2>/dev/null)
+if [ -n "$OLD_PIDS" ]; then
+  echo "  Cerrando instancia(s) anterior(es) en el puerto $PORT (PID: $(echo $OLD_PIDS | tr '\n' ' '))…"
+  kill $OLD_PIDS 2>/dev/null
+  sleep 1
+  # Si algún proceso no murió con SIGTERM, forzar con SIGKILL
+  STILL=$(lsof -ti tcp:"$PORT" 2>/dev/null)
+  if [ -n "$STILL" ]; then
+    kill -9 $STILL 2>/dev/null
+    sleep 1
+  fi
+fi
+
 # Iniciar servidor
 node server.js

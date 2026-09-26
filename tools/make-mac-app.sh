@@ -62,10 +62,20 @@ if [ -z "\$NODE" ]; then
   exit 1
 fi
 
-# Si ya hay algo en el puerto, solo abrir el browser
-if lsof -i :\$PORT -t &>/dev/null 2>&1; then
-  open "\$URL"
-  exit 0
+# Matar cualquier instancia previa en el puerto — Node cachea los módulos
+# require() en memoria al arrancar, así que un proceso viejo sigue sirviendo
+# código desactualizado aunque los archivos del proyecto ya se hayan
+# actualizado (ej. por un git pull). Reiniciar siempre garantiza que se
+# cargue la versión actual del motor de auditoría.
+OLD_PIDS=\$(lsof -ti :\$PORT 2>/dev/null)
+if [ -n "\$OLD_PIDS" ]; then
+  kill \$OLD_PIDS 2>/dev/null
+  sleep 1
+  STILL=\$(lsof -ti :\$PORT 2>/dev/null)
+  if [ -n "\$STILL" ]; then
+    kill -9 \$STILL 2>/dev/null
+    sleep 1
+  fi
 fi
 
 # Arrancar el servidor en background
