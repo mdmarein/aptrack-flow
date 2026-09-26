@@ -69,8 +69,8 @@ sudo apt-get install -y nodejs
 ### Opción B — git clone
 
 ```bash
-git clone https://github.com/mdmarein/track-flow.git
-cd track-flow
+git clone https://github.com/mdmarein/Track-Flow.git
+cd Track-Flow
 ```
 
 ---
