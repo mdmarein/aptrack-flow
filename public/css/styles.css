@@ -120,6 +120,9 @@ input::placeholder{color:var(--t2)}
 .atb{display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap;justify-content:flex-end}
 .sp{flex:1}
 .results-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
+.progress-footer{display:flex;justify-content:flex-end;margin-top:12px}
+.btn-cancel{background:transparent;border:1px solid var(--red);color:var(--red)}
+.btn-cancel:hover:not(:disabled){background:var(--rbg)}
 .fb{padding:3px 9px;border-radius:9px;font-size:11px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--t2);transition:background-color .15s,border-color .15s,color .15s;font-family:var(--sans);display:inline-flex;align-items:center;gap:5px}
 .fb:hover{border-color:var(--bhi);color:var(--t1)}
 .fb.on{border-color:var(--accent);color:var(--accent);background:var(--abg)}

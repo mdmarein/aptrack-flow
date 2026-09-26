@@ -154,6 +154,7 @@ async function runAudit(form) {
   $('pbar').classList.add('indet');
   $('pbar').style.width = '';
   $('progress-status').textContent = t('progress.crawling');
+  $('btn-cancel').classList.remove('hidden');
 
   showCard('c-progress', true);
   showCard('c-results', false);
@@ -238,10 +239,12 @@ function handleEvent(evt) {
       $('pbar').classList.remove('indet');
       $('pbar').style.width = '100%';
       $('progress-status').textContent = t('progress.done');
+      $('btn-cancel').classList.add('hidden');
       renderResults(evt);
       break;
     case 'error_fatal':
       setConfigError(evt.error || t('toast.fatal_error'));
+      $('btn-cancel').classList.add('hidden');
       showCard('c-progress', false);
       break;
   }
