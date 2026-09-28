@@ -8,6 +8,8 @@
 
 ![version](https://img.shields.io/badge/version-0.1.0-blue) ![license](https://img.shields.io/badge/license-AGPL--3.0-green) ![node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 
+**English version:** [README.en.md](README.en.md)
+
 Herramienta local y gratuita para auditar si los parámetros de tracking de campañas (`gclid`, `utm_*`, `fbclid`, etc.) sobreviven la navegación y los redirects dentro de un sitio web. Todo corre en tu computadora — sin dependencias npm, sin servicios externos.
 
 ---
