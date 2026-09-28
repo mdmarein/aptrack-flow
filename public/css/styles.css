@@ -29,8 +29,8 @@ body.light ::-webkit-scrollbar-thumb{background:var(--bhi)}
 
 /* ── Sticky top bar ── */
 .sticky-top{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:14px 0}
-.sticky-top .app-inner{max-width:1100px;margin:0 auto;padding:0 22px}
-.app{max-width:1100px;min-width:420px;margin:0 auto;padding:88px 22px 20px}
+.sticky-top .app-inner{max-width:1200px;margin:0 auto;padding:0 22px}
+.app{max-width:1200px;min-width:420px;margin:0 auto;padding:88px 22px 20px}
 
 /* ── Header ── */
 .hdr{display:flex;align-items:center;gap:13px}
@@ -40,6 +40,7 @@ body.light ::-webkit-scrollbar-thumb{background:var(--bhi)}
 .hdr-t h1{font-size:20px;font-weight:600;letter-spacing:-.01em}
 .hdr-t h1 em{font-style:normal;color:var(--accent)}
 .hdr-t p{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
+.hdr-t p i{text-transform:none;letter-spacing:0;color:var(--t1)}
 .hdr-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
 .btn-hdr-icon{display:flex;align-items:center;justify-content:center;gap:5px;width:30px;height:30px;border-radius:var(--rs);background:transparent;border:1px solid var(--border);color:var(--t1);cursor:pointer;transition:border-color .15s,color .15s}
 .btn-hdr-icon:hover{border-color:var(--bhi);color:var(--t0)}
@@ -163,6 +164,9 @@ td{padding:8px 10px;vertical-align:middle}
 .footer{margin-top:24px;margin-bottom:24px;text-align:center;font-size:11px;color:var(--t3)}
 .footer strong{color:var(--t0)}
 .footer em{font-style:normal;color:var(--accent)}
+.footer i{color:var(--t1)}
+.footer .footer-year{color:var(--t0)}
+body.light .footer .footer-year{color:#a0a0a0}
 .hidden{display:none!important}
 
 @media (max-width:700px){

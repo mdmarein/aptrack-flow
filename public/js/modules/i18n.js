@@ -12,7 +12,7 @@ export const LANG = (typeof window !== 'undefined' ? window.__APTRACKFLOW_LANG :
 const DICT = {
   es: {
     // ── Encabezado ────────────────────────────────────────────
-    'header.tagline':        'Tracking Param Audit',
+    'header.tagline':        'Auditoría de parámetros de tracking',
     'header.theme_to_light': 'Cambiar a modo claro',
     'header.theme_to_dark':  'Cambiar a modo oscuro',
     'header.lang_btn':       'EN',
@@ -108,12 +108,12 @@ const DICT = {
     'toast.no_results_dl':   'No hay resultados para descargar.',
 
     // ── Footer ────────────────────────────────────────────────────
-    'footer.tagline':        'Auditoría de supervivencia de parámetros de tracking',
+    'footer.tagline':        'Auditoría de parámetros de tracking',
   },
 
   en: {
     // ── Header ────────────────────────────────────────────────
-    'header.tagline':        'Tracking Param Audit',
+    'header.tagline':        'Tracking parameter audit',
     'header.theme_to_light': 'Switch to light mode',
     'header.theme_to_dark':  'Switch to dark mode',
     'header.lang_btn':       'ES',
@@ -209,7 +209,7 @@ const DICT = {
     'toast.no_results_dl':   'No results to download.',
 
     // ── Footer ────────────────────────────────────────────────────
-    'footer.tagline':        'Tracking parameter survival audit',
+    'footer.tagline':        'Tracking parameter audit',
   },
 };
 
