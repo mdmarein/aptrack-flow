@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/img/APTrack-flow-banner.png" alt="APTrack Flow" width="100%">
+  <img src="public/img/aptrack-flow-banner.png" alt="APTrack Flow" width="100%">
 </div>
 
 # APTrack Flow
