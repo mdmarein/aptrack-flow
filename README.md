@@ -1,6 +1,8 @@
-<!-- Banner: public/img/APTrack-flow-banner.png (pendiente) -->
+<div align="center">
+  <img src="public/img/APTrack-flow-banner.png" alt="APTrack Flow" width="100%">
+</div>
 
-# APTrack-Flow
+# APTrack Flow
 
 **Tracking Param Audit**
 
